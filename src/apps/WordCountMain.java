@@ -59,10 +59,10 @@ public class WordCountMain {
     }
 
     static Dictionary<String,Integer> buildMap(String impl) {
-        HashFunction<String> hf = new PolyHash()::hash;
+        HashFunction<String> hf = new PolyHash();
         switch (impl) {
             case "chaining":
-                return new HashTableChaining<String, Integer>(1<<15, hf);
+                return new HashTableChainingLinkedList<String, Integer>(1<<15, hf);
             case "open-linear":
                 return new HashTableOpenAddressing<String, Integer>(1<<16, hf, ProbingStrategy.linear());
             case "open-quadratic":
