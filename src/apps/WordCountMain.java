@@ -1,9 +1,17 @@
 package apps;
 
-import dict.*;
-import java.io.*;
+import dict.Dictionary;
+import dict.HashFunction;
+import dict.HashTableChainingLinkedList;
+import dict.HashTableOpenAddressing;
+import dict.PolyHash;
+import dict.ProbingStrategy;
+
+import java.io.BufferedReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
