@@ -46,6 +46,8 @@ public class DictionaryBenchmark {
         System.out.println("Input file: " + path.getFileName());
         System.out.println();
 
+        // Define Test Configs
+
         // Test configurations
         String[][] configs = {
             {"Hash Table with Chaining (LinkedList)", "chaining-ll", "poly"},
@@ -58,15 +60,19 @@ public class DictionaryBenchmark {
 
         BenchmarkResult[] results = new BenchmarkResult[configs.length];
 
+        // Main Benchmark Loop
         for (int i = 0; i < configs.length; i++) {
+            // extract the config data
             String name = configs[i][0];
             String impl = configs[i][1];
             String hashType = configs[i][2];
 
+            // print the implementation config
             System.out.println("-".repeat(80));
             System.out.printf("Test %d/%d: %s + %s hash%n", i + 1, configs.length, name, hashType.toUpperCase());
             System.out.println("-".repeat(80));
 
+            // run the benchmark and extract results
             results[i] = runBenchmark(path, impl, hashType, topN);
             System.out.println();
         }
@@ -163,24 +169,29 @@ public class DictionaryBenchmark {
     //
 
     static BenchmarkResult runBenchmark(Path path, String impl, String hashType, int topN) throws Exception {
+
+        // Create hash table
         Dictionary<String, Integer> map = buildMap(impl, hashType);
 
+        // start time
         long start = System.nanoTime();
         long tokens = 0;
 
+        // Read file and populate hash table
         try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = TOKEN.split(line.toLowerCase(Locale.ROOT));
-                for (String p : parts) {
-                    if (p.isEmpty()) continue;
-                    tokens++;
-                    Integer cur = map.get(p).orElse(0);
-                    map.put(p, cur + 1);
+            String line;  // variable to hold the line
+            while ((line = br.readLine()) != null) {  // read the line
+                String[] parts = TOKEN.split(line.toLowerCase(Locale.ROOT));  // split the line into tokenized parts to extract words
+                for (String p : parts) {  // for every tokenized part
+                    if (p.isEmpty()) continue;  // skip empty tokens
+                    tokens++;  // increase token total
+                    Integer curWordCount = map.get(p).orElse(0);  // get word count of word by searching its value
+                    map.put(p, curWordCount + 1);  // insert it into the hash after searching
                 }
             }
         }
 
+        // end time
         long end = System.nanoTime();
         double secs = (end - start) / 1e9;
 

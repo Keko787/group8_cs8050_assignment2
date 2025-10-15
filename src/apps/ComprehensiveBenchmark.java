@@ -98,10 +98,14 @@ public class ComprehensiveBenchmark {
     //
 
     private static void runFullBenchmark(BenchmarkRunner runner) {
+
+        // start the time
         long startTime = System.currentTimeMillis();
 
+        // run the test
         BenchmarkSuite suite = runner.runComprehensiveSuite();
 
+        // end the time
         long endTime = System.currentTimeMillis();
         double totalTimeSecs = (endTime - startTime) / 1000.0;
 
@@ -190,13 +194,17 @@ public class ComprehensiveBenchmark {
                 .build(),
         };
 
+        // for each config
         for (int i = 0; i < configs.length; i++) {
+            // print config
             System.out.printf("[%d/%d] Running: %s%n", i + 1, configs.length,
                 configs[i].getDescription());
 
+            // run benchmark and extract results
             BenchmarkResult result = runner.runBenchmark(configs[i]);
             suite.addResult(result);
 
+            // print results
             System.out.printf("  ✓ Completed: %.2f ms, %.0f ops/sec%n",
                 result.getTotalTimeMs(), result.getThroughput());
             System.out.println();
@@ -216,6 +224,7 @@ public class ComprehensiveBenchmark {
         double lf = Double.parseDouble(getArgOrDefault(args, "--lf", "0.75"));
         int ops = Integer.parseInt(getArgOrDefault(args, "--ops", "100000"));
 
+        // setup config
         BenchmarkConfig config = new BenchmarkConfig.Builder()
             .implementation(BenchmarkConfig.Implementation.valueOf(impl))
             .hashType(BenchmarkConfig.HashType.valueOf(hash))
@@ -225,11 +234,14 @@ public class ComprehensiveBenchmark {
             .operationCount(ops)
             .build();
 
+        // print config
         System.out.println("Configuration: " + config.getDescription());
         System.out.println();
 
+        // run test
         BenchmarkResult result = runner.runBenchmark(config);
 
+        // print result
         System.out.println();
         System.out.println(result);
     }
