@@ -4,6 +4,7 @@ import dict.Dictionary;
 import dict.HashFunction;
 import dict.HashTableChainingLinkedList;
 import dict.HashTableOpenAddressing;
+import dict.HashTableCuckoo;
 import dict.PolyHash;
 import dict.ProbingStrategy;
 import dict.SHA256Hash;
@@ -26,7 +27,7 @@ import java.util.regex.Pattern;
  */
 public class DictionaryBenchmark {
     //
-    // Argument Parsing, setup, and Initial Logs
+    // Main Process
     //
 
     static final Pattern TOKEN = Pattern.compile("[^a-zA-Z0-9]+");
@@ -55,7 +56,8 @@ public class DictionaryBenchmark {
             {"Hash Table with Open Addressing (Linear)", "open-linear", "poly"},
             {"Hash Table with Open Addressing (Linear)", "open-linear", "sha256"},
             {"Hash Table with Open Addressing (Quadratic)", "open-quadratic", "poly"},
-            {"Hash Table with Open Addressing (Quadratic)", "open-quadratic", "sha256"}
+            {"Hash Table with Open Addressing (Quadratic)", "open-quadratic", "sha256"},
+            {"Hash Table with Cuckoo Hashing", "cuckoo", "dual"}
         };
 
         BenchmarkResult[] results = new BenchmarkResult[configs.length];
@@ -80,6 +82,10 @@ public class DictionaryBenchmark {
         // Print comparison summary
         printComparisonSummary(results, configs);
     }
+
+    //
+    // Result Class, class setup
+    //
 
     static class BenchmarkResult {
         String implName;
@@ -107,8 +113,11 @@ public class DictionaryBenchmark {
     //
 
     static Dictionary<String, Integer> buildMap(String impl, String hashType) {
+
+        // select hashing type
         HashFunction<String> hf = hashType.equals("sha256") ? new SHA256Hash() : new PolyHash();
 
+        // selecting hashing implementation, based on hashing type, probing methods, load factor, capacity
         switch (impl) {
             case "chaining-ll":
                 return new HashTableChainingLinkedList<>(16, hf, 0.75);
@@ -116,11 +125,17 @@ public class DictionaryBenchmark {
                 return new HashTableOpenAddressing<>(16, hf, ProbingStrategy.linear(), 0.5);
             case "open-quadratic":
                 return new HashTableOpenAddressing<>(16, hf, ProbingStrategy.quadratic(1, 3), 0.5);
+            case "cuckoo":
+                // Cuckoo hashing uses two different hash functions
+                HashFunction<String> hf1 = new PolyHash();
+                HashFunction<String> hf2 = new SHA256Hash();
+                return new HashTableCuckoo<>(16, hf1, hf2);
             default:
                 throw new IllegalArgumentException("Unknown impl: " + impl);
         }
     }
 
+    // Method to print result summary
     static void printComparisonSummary(BenchmarkResult[] results, String[][] configs) {
         System.out.println("=".repeat(80));
         System.out.println("PERFORMANCE COMPARISON SUMMARY");
@@ -162,6 +177,7 @@ public class DictionaryBenchmark {
         System.out.println("  Chaining (LinkedList): Simple, good average case, no table full issues");
         System.out.println("  Open Addressing (Linear): Cache-friendly, clustering issues");
         System.out.println("  Open Addressing (Quadratic): Reduces clustering, needs good hash");
+        System.out.println("  Cuckoo Hashing: O(1) worst-case lookup, uses two tables and hash functions");
     }
 
     //

@@ -41,6 +41,8 @@ public class DataGenerator {
      * @return List of generated keys
      */
     public List<String> generateKeys(int count, Distribution distribution, double uniqueRatio) {
+
+        // determine the amount of unique keys
         int uniqueCount = (int) (count * uniqueRatio);
         List<String> uniqueKeys = generateUniqueKeys(uniqueCount, distribution);
 
@@ -49,19 +51,20 @@ public class DataGenerator {
         }
 
         // Add duplicates based on distribution
-        List<String> result = new ArrayList<>(count);
-        result.addAll(uniqueKeys);
+        List<String> result = new ArrayList<>(count);  // make the list
+        result.addAll(uniqueKeys);  // add to the list
 
-        while (result.size() < count) {
+        while (result.size() < count) {  // duplicate keys until it meets count quota
             // Pick a random unique key to duplicate
             String key = uniqueKeys.get(random.nextInt(uniqueKeys.size()));
-            result.add(key);
+            result.add(key);  // add to list
         }
 
         Collections.shuffle(result, random);
         return result;
     }
 
+    // select and execute which distribution to follow when
     private List<String> generateUniqueKeys(int count, Distribution distribution) {
         switch (distribution) {
             case UNIFORM:
@@ -81,19 +84,21 @@ public class DataGenerator {
      * Generate uniformly distributed random strings.
      */
     private List<String> generateUniform(int count) {
+        // init hash set
         Set<String> unique = new HashSet<>();
         int length = 8;
 
+        // create keys until unique size meets the count
         while (unique.size() < count) {
-            StringBuilder sb = new StringBuilder(length);
+            StringBuilder sb = new StringBuilder(length);  // create a string variable with the size set to length
             for (int i = 0; i < length; i++) {
-                char c = (char) ('a' + random.nextInt(26));
-                sb.append(c);
+                char c = (char) ('a' + random.nextInt(26));  // create a character for the string
+                sb.append(c);  // add the character to the string key
             }
-            unique.add(sb.toString());
+            unique.add(sb.toString());  // add the key to the list
         }
 
-        return new ArrayList<>(unique);
+        return new ArrayList<>(unique);  // return list
     }
 
     /**
@@ -101,18 +106,19 @@ public class DataGenerator {
      * A small number of keys appear very frequently.
      */
     private List<String> generatePowerLaw(int count) {
+        // use Uniform Distribution as the base
         List<String> base = generateUniform(count);
         List<String> result = new ArrayList<>();
 
         // Zipf distribution: frequency ~ 1/rank^s, where s=1.0
         double[] probabilities = new double[count];
         double sum = 0;
-        for (int i = 0; i < count; i++) {
-            probabilities[i] = 1.0 / (i + 1);
-            sum += probabilities[i];
+        for (int i = 0; i < count; i++) {  // get the sum of frequencies based on size
+            probabilities[i] = 1.0 / (i + 1);  // generate probability based on list length
+            sum += probabilities[i];  // accumulate sum of probabilities
         }
 
-        // Normalize
+        // Normalize probabilities with the sum
         for (int i = 0; i < count; i++) {
             probabilities[i] /= sum;
         }
@@ -120,11 +126,11 @@ public class DataGenerator {
         // Generate keys according to distribution
         for (int i = 0; i < count; i++) {
             double r = random.nextDouble();
-            double cumulative = 0;
+            double cumulative = 0;  // cumulation of probabilities
             for (int j = 0; j < count; j++) {
-                cumulative += probabilities[j];
-                if (r <= cumulative) {
-                    result.add(base.get(j));
+                cumulative += probabilities[j];  // get the cumulative sum of probabilities
+                if (r <= cumulative) {  // if random value is smaller than cumulative, add it indexed value from base to the list
+                    result.add(base.get(j));  // get the key from the base and add it to the list
                     break;
                 }
             }

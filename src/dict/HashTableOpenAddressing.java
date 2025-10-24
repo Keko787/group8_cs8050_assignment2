@@ -72,12 +72,12 @@ public class HashTableOpenAddressing<K, V> implements Dictionary<K, V> {
             resize();  // resize if greater than load factor
         }
 
-        // probing loop
+        // probing loop, i represents probing attempt
         for (int i = 0; i < table.length; i++) {  // for the length of the table
             int index = getIndex(key, i);  // find the given index of the key in the table, using probing technique in getIndex
             Entry<K, V> entry = table[index];  // assign it as an entry
 
-            if (entry == null || entry.deleted) {  // assign it to an empty or deleted slot
+            if (entry == null || entry.deleted) {  // assign it to a new/empty or deleted slot
                 if (entry != null && entry.deleted) {  // if the slot was a deleted slot then decrease the delete count
                     deletedCount--;
                 }
@@ -87,7 +87,7 @@ public class HashTableOpenAddressing<K, V> implements Dictionary<K, V> {
             }
 
             if (entry.key.equals(key)) {  // if the key matches an existing key
-                entry.value = value;  // insert the value
+                entry.value = value;  // update the existing entry by inserting the value
                 return;
             }
         }

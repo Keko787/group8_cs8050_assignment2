@@ -33,6 +33,8 @@ public class InstrumentedHashTableChainingLinkedList<K, V> implements Dictionary
     private final HashTableMetrics metrics;  // Load Metrics object
     private final boolean usePrimeCapacity;  // flag to turn on prime numbers for capacity
 
+    // Constructors for Benchmark
+
     public InstrumentedHashTableChainingLinkedList(int capacity, HashFunction<K> hashFunction,
                                         double loadFactorThreshold, boolean usePrimeCapacity) {
         int actualCapacity = usePrimeCapacity ? nextPrime(capacity) : capacity;

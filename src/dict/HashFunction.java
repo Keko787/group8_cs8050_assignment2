@@ -1,7 +1,7 @@
 package dict;
 
 /**
- * A functional interface for hash functions. (prototype)
+ * A functional interface for hash functions.
  */
 @FunctionalInterface
 public interface HashFunction<K> {

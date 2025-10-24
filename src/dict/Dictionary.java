@@ -3,7 +3,7 @@ package dict;
 import java.util.Optional;
 
 /**
- * A dictionary interface mapping keys to values. (prototype)
+ * A dictionary interface mapping keys to values.=
  */
 public interface Dictionary<K, V> {
     /**
