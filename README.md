@@ -62,19 +62,19 @@ This project implements a comprehensive Dictionary Abstract Data Type (ADT) with
 
 ### Basic Word Count Example
 ```bash
-java -cp target/assignment2-dictionaries-0.1.0-SNAPSHOT.jar apps.WordCountMain <path-to-text> <chaining|open-linear|open-quadratic> [topN]
+java -cp target/assignment2-dictionaries-0.1.0-SNAPSHOT.jar apps.WordCounter <path-to-text> <chaining|open-linear|open-quadratic> [topN]
 ```
 
 **Examples**:
 ```bash
 # Using chaining with linked lists
-java -cp target/assignment2-dictionaries-0.1.0-SNAPSHOT.jar apps.WordCountMain data.txt chaining 20
+java -cp target/assignment2-dictionaries-0.1.0-SNAPSHOT.jar apps.WordCounter data.txt chaining 20
 
 # Using open addressing with linear probing
-java -cp target/assignment2-dictionaries-0.1.0-SNAPSHOT.jar apps.WordCountMain data.txt open-linear 20
+java -cp target/assignment2-dictionaries-0.1.0-SNAPSHOT.jar apps.WordCounter data.txt open-linear 20
 
 # Using open addressing with quadratic probing
-java -cp target/assignment2-dictionaries-0.1.0-SNAPSHOT.jar apps.WordCountMain data.txt open-quadratic 20
+java -cp target/assignment2-dictionaries-0.1.0-SNAPSHOT.jar apps.WordCounter data.txt open-quadratic 20
 ```
 
 ### Comprehensive Benchmark
